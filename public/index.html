@@ -21,17 +21,37 @@
                 wheel.addToWorld();
                 this.wheel = wheel;
 
-                game.input.addMoveCallback(function (point, x, y) {
-                }, this);
-
                 this.image = game.add.sprite(150, 150, "image");
+
+                this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+                this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+                this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+
+                this.defaultTint = this.image.tint;
             },
             update: function () {
+
                 if (game.input.activePointer.isDown) {
                     var mp = game.input.mousePointer;
-                    var rgb = this.wheel.getPixelRGB(mp.x, mp.y);
-                    this.image.tint = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
-                };
+                    this.rgb = this.wheel.getPixelRGB(mp.x, mp.y);
+                }
+
+                if (this.rgb) {
+                    var adjustment = 0;
+                    if (this.upKey.isDown) adjustment = 2;
+                    else if (this.downKey.isDown) adjustment = -2;
+
+                    this.rgb.r = Math.min(255, Math.max(0, this.rgb.r + adjustment));
+                    this.rgb.g = Math.min(255, Math.max(0, this.rgb.g + adjustment));
+                    this.rgb.b = Math.min(255, Math.max(0, this.rgb.b + adjustment));
+
+                    this.image.tint = Phaser.Color.getColor(this.rgb.r, this.rgb.g, this.rgb.b);
+
+                    if (this.rightKey.isDown) {
+                        this.image.tint = this.defaultTint;
+                        this.rgb = null;
+                    }
+                }
             }
         }
 
