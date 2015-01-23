@@ -1,0 +1,42 @@
+<html>
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js"></script>
+</head>
+<body>
+    <script>
+        var game = new Phaser.Game(500, 500, Phaser.AUTO);
+        var state = {
+            preload: function () {
+                var image = "koala.png";
+                if (window.location.search) image = window.location.search.slice(1);
+                game.load.image("image", image);
+                game.load.image("wheel", "wheel.png");
+
+            },
+            create: function () {
+
+                var wheel = game.make.bitmapData(500, 500);
+                wheel.draw("wheel", 280, 280);
+                wheel.update();
+                wheel.addToWorld();
+                this.wheel = wheel;
+
+                game.input.addMoveCallback(function (point, x, y) {
+                }, this);
+
+                this.image = game.add.sprite(150, 150, "image");
+            },
+            update: function () {
+                if (game.input.activePointer.isDown) {
+                    var mp = game.input.mousePointer;
+                    var rgb = this.wheel.getPixelRGB(mp.x, mp.y);
+                    this.image.tint = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
+                };
+            }
+        }
+
+        game.state.add("main", state);
+        game.state.start("main");
+    </script>
+</body>
+</html>
