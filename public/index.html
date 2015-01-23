@@ -45,7 +45,6 @@
                 if (this.rgb) {
                     if (this.upKey.isDown) this.adj += 2;
                     else if (this.downKey.isDown) this.adj += -2;
-                    this.adj = minMax(this.adj);
 
                     this.image.tint = Phaser.Color.getColor(minMax(this.rgb.r + this.adj), minMax(this.rgb.g + this.adj), minMax(this.rgb.b + this.adj));
 
